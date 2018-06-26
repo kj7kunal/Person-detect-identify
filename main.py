@@ -16,7 +16,7 @@ def parser():
 	ap.add_argument("-v","--video", dest='video', help="Input Video for person detection")
 	# ap.add_argument("-i","--img", dest='imgpath', help="Input Image Folder for person detection")
 	# ap.add_argument("-o","--out", dest='outpath', help="Output Folder for person detection")
-	ap.add_argument("-tc","--confthres", dest='confthres', help = "Object Confidence to filter predictions", default=0.5)
+	ap.add_argument("-tc","--confthres", dest='confthres', help = "Object Confidence to filter predictions", default=0.65)
 	ap.add_argument("-iou","--nmsthres", dest = "nmsthres", help = "NMS IOU Threshhold", default = 0.4)
 	ap.add_argument("-c","--cfg", dest='cfg',help="Yolov3 Darknet Config File", default="./cfg/yolov3.cfg")
 	ap.add_argument("-w","--weights", dest='weights',help="Yolov3 Pretrained Weights File", default="./yolov3.weights")
@@ -81,7 +81,7 @@ if __name__=="__main__":
 		print("No GPU found. Running on CPU")
 	YOLO = YOLO.to(device)
 
-	# Specify testing
+	# Specify testing 
 	YOLO.eval()
 
 	if args["video"]:

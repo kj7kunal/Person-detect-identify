@@ -109,11 +109,11 @@ def IOU(box1, box2):
 	ny2 =  torch.min(b1_y2, b2_y2)
 
 	#Intersection(n) area
-	n_area = torch.clamp(nx2-nx1+1, min=0)*torch.clamp(ny2-ny1+1, min=0)
+	n_area = torch.clamp(nx2-nx1, min=0)*torch.clamp(ny2-ny1, min=0)
 
 	#Rectangle Areas 
-	b1_area = (b1_x2 - b1_x1+1)*(b1_y2 - b1_y1+1)
-	b2_area = (b2_x2 - b2_x1+1)*(b2_y2 - b2_y1+1)
+	b1_area = (b1_x2 - b1_x1)*(b1_y2 - b1_y1)
+	b2_area = (b2_x2 - b2_x1)*(b2_y2 - b2_y1)
 
 	# IOU = Intersection Over Union = Intersection/Union
 	iou = n_area / (b1_area + b2_area - n_area)
@@ -124,7 +124,7 @@ def nmsYOLO(pred, device, confthres = 0.5, num_classes = 80, nmsthres = 0.4):
 	"""
 	Input: (batchsz x bounding boxes x bbox attributes) torch tensor
 	Output: (nms bounding boxes x 8) torch tensor
-	8 values: Batch Idx(0),bounding box coordinates (1,2,3,4),
+	8 values: Batch Idx(0),bounding box corner coordinates (1,2,3,4),
 			  object conf(5), max class prob (6), object label (7)
 	"""
 	batch_sz = pred.size(0)
@@ -138,9 +138,11 @@ def nmsYOLO(pred, device, confthres = 0.5, num_classes = 80, nmsthres = 0.4):
 	pred = pred*conf_mask
 	# nzpred = torch.nonzero(pred[:,:,4])
 	# pred = pred[]
+	boxenlarge = 0.05
+	pred[:,:,2:4] *= (boxenlarge+torch.exp((1-pred[:,:,4])/2).float().unsqueeze(2))
 
 	# using center and box lengths, get topleft and bottomright corners
-	# which will be easier to plot using opencv rectangle function
+	# which will be easier to plot using opencv rectangle functionN
 	corners = pred.new(pred[:,:,:4].shape)
 	corners[:,:,0] = (pred[:,:,0] - pred[:,:,2]/2)
 	corners[:,:,1] = (pred[:,:,1] - pred[:,:,3]/2)
@@ -204,8 +206,8 @@ def nmsYOLO(pred, device, confthres = 0.5, num_classes = 80, nmsthres = 0.4):
 					output = out
 				else:
 					output	= torch.cat((output,out))
-
-				break
+				print(out[:,5:7])
+				break	#No need to check any other classes
 	if isinstance(output,list):
 		return 0
 	return output
