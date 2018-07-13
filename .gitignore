@@ -1,1 +1,13 @@
-./yolov3.weights
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# YoloV3 Weights file
+/yolov3.weights
+
+# Data Folders
+/testembed/*.jpg
+/testembed/*.csv
+/saved/
+
