@@ -5,6 +5,7 @@ import time
 from img2vec import Img2Vec
 from PIL import Image
 from sklearn.metrics.pairwise import cosine_similarity
+import cv2
 
 import csv
 
@@ -20,6 +21,7 @@ def findSimilarity(mod='resnet34',path=input_path,ol = 512,thres=0.8):
     for file in os.listdir(input_path):
         filename = os.fsdecode(file)
         if filename.endswith('.jpg'):
+            # img = cv2.imread(os.path.join(input_path, filename))
             img = Image.open(os.path.join(input_path, filename))
             vec = img2vec.get_vec(img) 
             pics[filename] = vec

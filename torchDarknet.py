@@ -206,7 +206,7 @@ def nmsYOLO(pred, device, confthres = 0.5, num_classes = 80, nmsthres = 0.4):
 					output = out
 				else:
 					output	= torch.cat((output,out))
-				print(out[:,5:7])
+				# print(out[:,5:7])
 				break	#No need to check any other classes
 	if isinstance(output,list):
 		return 0
